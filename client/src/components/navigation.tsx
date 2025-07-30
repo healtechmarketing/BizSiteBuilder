@@ -29,6 +29,12 @@ export default function Navigation() {
               Services
             </button>
             <button 
+              onClick={() => scrollToSection('platforms')}
+              className="text-gray-600 hover:text-primary font-medium transition-colors"
+            >
+              Platforms
+            </button>
+            <button 
               onClick={() => scrollToSection('pricing')}
               className="text-gray-600 hover:text-primary font-medium transition-colors"
             >
@@ -73,6 +79,12 @@ export default function Navigation() {
                 className="block text-gray-600 hover:text-primary font-medium"
               >
                 Services
+              </button>
+              <button 
+                onClick={() => scrollToSection('platforms')}
+                className="block text-gray-600 hover:text-primary font-medium"
+              >
+                Platforms
               </button>
               <button 
                 onClick={() => scrollToSection('pricing')}

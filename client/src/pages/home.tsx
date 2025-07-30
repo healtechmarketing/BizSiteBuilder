@@ -1,6 +1,7 @@
 import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
 import ServicesOverview from "@/components/services-overview";
+import PlatformsSection from "@/components/platforms-section";
 import PricingSection from "@/components/pricing-section";
 import CaseStudies from "@/components/case-studies";
 import QuoteForm from "@/components/quote-form";
@@ -99,6 +100,7 @@ export default function Home() {
       </section>
 
       <ServicesOverview />
+      <PlatformsSection />
       <PricingSection />
       <CaseStudies />
       <QuoteForm />

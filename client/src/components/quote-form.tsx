@@ -20,6 +20,8 @@ const formSchema = insertQuoteRequestSchema.extend({
     crm: z.boolean().default(false),
     multilocation: z.boolean().default(false),
   }),
+  preferredAutomationPlatform: z.string().optional(),
+  preferredLLM: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -48,6 +50,8 @@ export default function QuoteForm() {
         crm: false,
         multilocation: false,
       },
+      preferredAutomationPlatform: "",
+      preferredLLM: "",
       message: "",
     },
   });
@@ -283,6 +287,59 @@ export default function QuoteForm() {
                   </div>
                 </div>
               </div>
+            </div>
+            
+            {/* Platform Preferences */}
+            <div className="grid md:grid-cols-2 gap-8 mt-8">
+              <div>
+                <Label htmlFor="preferredAutomationPlatform" className="text-sm font-semibold text-gray-900 mb-3">
+                  Preferred Automation Platform (Optional)
+                </Label>
+                <Select onValueChange={(value) => setValue("preferredAutomationPlatform", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choose your platform" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="n8n">n8n (Open-source)</SelectItem>
+                    <SelectItem value="zapier">Zapier</SelectItem>
+                    <SelectItem value="power-automate">Microsoft Power Automate</SelectItem>
+                    <SelectItem value="make">Make.com</SelectItem>
+                    <SelectItem value="no-preference">No Preference</SelectItem>
+                    <SelectItem value="other">Other (specify in message)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="preferredLLM" className="text-sm font-semibold text-gray-900 mb-3">
+                  Preferred AI Model (Optional)
+                </Label>
+                <Select onValueChange={(value) => setValue("preferredLLM", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choose AI model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="chatgpt">ChatGPT (GPT-4o/4 Turbo)</SelectItem>
+                    <SelectItem value="claude">Claude (Anthropic)</SelectItem>
+                    <SelectItem value="grok">Grok (xAI)</SelectItem>
+                    <SelectItem value="deepseek">DeepSeek</SelectItem>
+                    <SelectItem value="gemini">Google Gemini</SelectItem>
+                    <SelectItem value="no-preference">No Preference</SelectItem>
+                    <SelectItem value="other">Other (specify in message)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="mt-8">
+              <Label htmlFor="message" className="text-sm font-semibold text-gray-900 mb-3">
+                Additional Requirements or Questions (Optional)
+              </Label>
+              <textarea 
+                {...register("message")}
+                placeholder="Tell us more about your specific needs, existing tools, or any special requirements..."
+                className="w-full p-3 border border-gray-300 rounded-lg resize-none h-24 focus:ring-2 focus:ring-primary focus:border-primary"
+              />
             </div>
             
             <div className="mt-8 p-6 bg-gray-50 rounded-xl">
