@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,8 +26,6 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function QuoteForm() {
   const { toast } = useToast();
-  const [estimatedCost, setEstimatedCost] = useState("$0");
-  const [maintenancePlan, setMaintenancePlan] = useState("Select options above");
 
   const {
     register,
@@ -58,10 +56,10 @@ export default function QuoteForm() {
   const callVolume = watch("callVolume");
   const features = watch("features");
 
-  // Calculate quote based on selections
+  // Calculate quote based on current selections
   const calculateQuote = () => {
     let baseCost = 500;
-    let selectedFeatureCount = Object.values(features).filter(Boolean).length;
+    let selectedFeatureCount = Object.values(features || {}).filter(Boolean).length;
     
     // Adjust base cost based on business type
     if (businessType === "healthcare" || businessType === "professional") {
@@ -79,38 +77,25 @@ export default function QuoteForm() {
     baseCost += selectedFeatureCount * 150;
     
     // Multi-location adds significant complexity
-    if (features.multilocation) {
+    if (features?.multilocation) {
       baseCost += 800;
     }
     
     // Determine recommended maintenance plan
     let recommendedPlan = "Essential ($149/month)";
-    if (selectedFeatureCount >= 3 || features.multilocation) {
+    if (selectedFeatureCount >= 3 || features?.multilocation) {
       recommendedPlan = "Elite ($399/month)";
     } else if (selectedFeatureCount >= 2 || callVolume === "high") {
       recommendedPlan = "Proactive ($249/month)";
     }
     
-    setEstimatedCost(`$${baseCost.toLocaleString()}`);
-    setMaintenancePlan(recommendedPlan);
-    
-    // Update form values for submission
-    setValue("estimatedCost", `$${baseCost.toLocaleString()}`);
-    setValue("maintenancePlan", recommendedPlan);
+    return {
+      estimatedCost: `$${baseCost.toLocaleString()}`,
+      maintenancePlan: recommendedPlan
+    };
   };
 
-  // Recalculate when selections change
-  useState(() => {
-    calculateQuote();
-  });
-
-  // Watch for changes and recalculate
-  useState(() => {
-    const subscription = watch(() => {
-      calculateQuote();
-    });
-    return () => subscription.unsubscribe();
-  });
+  const { estimatedCost, maintenancePlan } = calculateQuote();
 
   const submitQuoteMutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -133,7 +118,13 @@ export default function QuoteForm() {
   });
 
   const onSubmit = (data: FormData) => {
-    submitQuoteMutation.mutate(data);
+    const quote = calculateQuote();
+    const submissionData = {
+      ...data,
+      estimatedCost: quote.estimatedCost,
+      maintenancePlan: quote.maintenancePlan
+    };
+    submitQuoteMutation.mutate(submissionData);
   };
 
   return (
