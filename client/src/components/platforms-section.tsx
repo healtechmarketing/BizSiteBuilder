@@ -1,4 +1,4 @@
-import { SiZapier, SiOpenai, SiGoogle } from "react-icons/si";
+import { SiZapier, SiOpenai } from "react-icons/si";
 
 const automationPlatforms = [
   {
@@ -13,7 +13,7 @@ const automationPlatforms = [
   },
   {
     name: "Power Automate",
-    logo: "https://powerautomate.microsoft.com/favicon.ico",
+    logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftazure.svg",
     description: "Microsoft automation platform"
   },
   {
@@ -36,7 +36,7 @@ const llmProviders = [
   },
   {
     name: "Grok",
-    logo: "https://grok.x.ai/favicon.ico",
+    logo: "data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='24' height='24' rx='4' fill='%23000'/%3E%3Ctext x='12' y='16' text-anchor='middle' fill='white' font-size='8' font-weight='bold'%3EGrok%3C/text%3E%3C/svg%3E",
     description: "xAI's conversational AI"
   },
   {
@@ -46,7 +46,7 @@ const llmProviders = [
   },
   {
     name: "Gemini",
-    icon: SiGoogle,
+    logo: "data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='10' fill='%234285F4'/%3E%3Ctext x='12' y='16' text-anchor='middle' fill='white' font-size='6' font-weight='bold'%3EGemini%3C/text%3E%3C/svg%3E",
     description: "Google's multimodal AI"
   }
 ];
@@ -87,7 +87,8 @@ export default function PlatformsSection() {
                           target.style.display = 'none';
                           const parent = target.parentElement;
                           if (parent) {
-                            parent.innerHTML = `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 font-semibold text-xs">${platform.name}</div>`;
+                            const initials = platform.name.split(' ').map(word => word[0]).join('').slice(0,3);
+                            parent.innerHTML = `<div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">${initials}</div>`;
                           }
                         }}
                       />
@@ -123,7 +124,8 @@ export default function PlatformsSection() {
                           target.style.display = 'none';
                           const parent = target.parentElement;
                           if (parent) {
-                            parent.innerHTML = `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 font-semibold text-xs">${provider.name}</div>`;
+                            const initials = provider.name.split(' ').map(word => word[0]).join('').slice(0,3);
+                            parent.innerHTML = `<div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">${initials}</div>`;
                           }
                         }}
                       />
