@@ -41,9 +41,10 @@ Located in `shared/schema.ts`, defines:
 
 ### Storage Layer
 - **Interface**: `IStorage` interface for data operations
-- **Implementation**: In-memory storage (`MemStorage`) for development
-- **Production Ready**: Configured for PostgreSQL via Drizzle ORM
+- **Implementation**: PostgreSQL database storage (`DatabaseStorage`) via Drizzle ORM
+- **Database**: PostgreSQL with Neon serverless driver
 - **Methods**: CRUD operations for quote requests and contact messages
+- **Tables**: quote_requests and contact_messages with proper schema validation
 
 ### Frontend Components
 - **Landing Page**: Complete marketing site with hero, services, pricing, case studies
@@ -105,16 +106,17 @@ Located in `shared/schema.ts`, defines:
 4. **Database**: PostgreSQL connection via environment variables
 
 ### Environment Configuration
-- Development: In-memory storage, Vite dev server
+- Development: PostgreSQL database, Vite dev server
 - Production: PostgreSQL database, built static assets
 - Database URL configuration via `DATABASE_URL` environment variable
-- Drizzle migrations stored in `./migrations` directory
+- Database tables: `quote_requests` and `contact_messages`
+- Drizzle schema push used for database synchronization
 
 ### Key Architectural Decisions
 
 **Monorepo Structure**: Single repository with shared types between frontend and backend reduces duplication and ensures type safety across the full stack.
 
-**In-Memory Development Storage**: Allows rapid development without database setup, while maintaining production PostgreSQL compatibility through the storage interface.
+**PostgreSQL Database Storage**: Uses PostgreSQL database for persistent data storage with Drizzle ORM providing type-safe database operations and automatic schema synchronization.
 
 **Shared Validation**: Zod schemas shared between frontend and backend ensure consistent validation and reduce code duplication.
 
