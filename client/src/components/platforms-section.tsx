@@ -13,7 +13,7 @@ const automationPlatforms = [
   },
   {
     name: "Power Automate",
-    logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftazure.svg",
+    logo: "data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='24' height='24' rx='3' fill='%23742774'/%3E%3Ctext x='12' y='8' text-anchor='middle' fill='white' font-size='4' font-weight='bold'%3EPower%3C/text%3E%3Ctext x='12' y='14' text-anchor='middle' fill='white' font-size='4' font-weight='bold'%3EAutomate%3C/text%3E%3C/svg%3E",
     description: "Microsoft automation platform"
   },
   {
