@@ -1,23 +1,23 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express, { type Request, type Response, type NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
-// Middleware for parsing JSON and form data
+// Middleware to parse JSON and URL-encoded payloads
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Basic request logging for /api routes
+// Middleware to log API requests
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let capturedJsonResponse: Record<string, any> | undefined;
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+  const originalJson = res.json;
+  res.json = function (body: any, ...args: any[]) {
+    capturedJsonResponse = body;
+    return originalJson.call(this, body, ...args);
   };
 
   res.on("finish", () => {
@@ -39,12 +39,37 @@ app.use((req, res, next) => {
   next();
 });
 
-// IIFE to wrap async setup
 (async () => {
-  // Register API and other routes
-  await registerRoutes(app);
+  // Register API routes
+  const server = await registerRoutes(app);
 
-  // Global error handler
+  // Error handler (must be after routes)
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "
+    const message = err.message || "Internal Server Error";
+
+    res.status(status).json({ message });
+    log(`Error ${status}: ${message}`);
+  });
+
+  // Development mode: enable Vite middleware
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    // Production: serve static files
+    serveStatic(app);
+  }
+
+  // Start the server
+  const port = parseInt(process.env.PORT || "5000", 10);
+  server.listen(
+    {
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    },
+    () => {
+      log(`✅ Server running on http://localhost:${port}`);
+    }
+  );
+})();
