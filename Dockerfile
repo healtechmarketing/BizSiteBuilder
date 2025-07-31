@@ -1,25 +1,26 @@
-# ---- Build Stage ----
-FROM node:18 AS builder
+# Use Node 20 with Debian slim
+FROM node:20-slim
 
+# Set working directory
 WORKDIR /app
 
-COPY package*.json tsconfig.json vite.config.ts ./
-COPY client ./client
-COPY server ./server
-COPY shared ./shared
-COPY tailwind.config.ts postcss.config.js drizzle.config.ts ./
+# Copy only necessary files first for caching
+COPY package.json package-lock.json* ./
 
+# Install dependencies
 RUN npm install
+
+# Copy the full app
+COPY . .
+
+# Build the TypeScript code
 RUN npm run build
 
-# ---- Production Stage ----
-FROM node:18-slim
+# Set environment variable
+ENV PORT=8080
 
-WORKDIR /app
-
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY package*.json ./
-
+# Expose Cloud Run port
 EXPOSE 8080
+
+# Start the server (entry point must match built file path)
 CMD ["node", "dist/index.js"]
